@@ -99,14 +99,25 @@ export interface ScreenProps extends ViewProps {
    */
   replaceAnimation?: ScreenReplaceTypes;
   /**
-   * How the screen should appear/disappear when pushed or popped at the top of the stack.
-   * The following values are currently supported:
-   * - "default" – uses a platform default animation
-   * - "fade" – fades screen in or out
-   * - "flip" – flips the screen, requires stackPresentation: "modal" (iOS only)
-   * - "slide_from_right" - slide in the new screen from right to left (Android only, resolves to default transition on iOS)
-   * - "slide_from_left" - slide in the new screen from left to right (Android only, resolves to default transition on iOS)
-   * - "none" – the screen appears/dissapears without an animation
+   * @description Controls in which orientation should the screen appear.
+   * @type "default" - on iOS, it resolves to "all" without "portrait_down" and on Android it lets the system decide the best orientation
+   * @type "all" – all orientations are permitted
+   * @type "portrait" – portrait orientations are permitted
+   * @type "portrait_up" – right-side portrait orientation is permitted
+   * @type "portrait_down" – upside-down portrait orientation is permitted
+   * @type "landscape" – landscape orientations are permitted
+   * @type "landscape_left" – landscape-left orientation is permitted
+   * @type "landscape_right" – landscape-right orientation is permitted
+   */
+  screenOrientation?: ScreenOrientationTypes;
+  /**
+   * @description Allows for the customization of how the given screen should appear/dissapear when pushed or popped at the top of the stack. The following values are currently supported:
+   *  @type "default" – uses a platform default animation
+   *  @type "fade" – fades screen in or out
+   *  @type "flip" – flips the screen, requires stackPresentation: "modal" (iOS only)
+   *  @type "slide_from_right" - slide in the new screen from right to left (Android only, resolves to default transition on iOS)
+   *  @type "slide_from_left" - slide in the new screen from left to right (Android only, resolves to default transition on iOS)
+   *  @type "none" – the screen appears/dissapears without an animation
    */
   stackAnimation?: StackAnimationTypes;
   /**
@@ -121,6 +132,21 @@ export interface ScreenProps extends ViewProps {
    * - "formSheet" – will use "UIModalPresentationFormSheet" modal style on iOS and will fallback to "modal" on Android.
    */
   stackPresentation?: StackPresentationTypes;
+  /**
+   * @host (iOS only)
+   * @description Sets the status bar animation (similar to the `StatusBar` component). Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file. Defaults to `fade`.
+   */
+  statusBarAnimation?: 'none' | 'fade' | 'slide';
+  /**
+   * @host (iOS only)
+   * @description When set to true, the status bar for this screen is hidden. Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file. Defaults to `false`.
+   */
+  statusBarHidden?: boolean;
+  /**
+   * @host (iOS only)
+   * @description Sets the status bar color (similar to the `StatusBar` component). Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file. Defaults to `auto`.
+   */
+  statusBarStyle?: 'inverted' | 'auto' | 'light' | 'dark';
 }
 
 export interface ScreenContainerProps extends ViewProps {
@@ -232,37 +258,7 @@ export interface ScreenStackHeaderConfigProps extends ViewProps {
    */
   largeTitleHideShadow?: boolean;
   /**
-   * In which orientation should the screen appear.
-   * The following values are currently supported:
-   * - "default" - resolves to "all" without "portrait_down" on iOS. On Android, this lets the system decide the best orientation.
-   * - "all" – all orientations are permitted
-   * - "portrait" – portrait orientations are permitted
-   * - "portrait_up" – right-side portrait orientation is permitted
-   * - "portrait_down" – upside-down portrait orientation is permitted
-   * - "landscape" – landscape orientations are permitted
-   * - "landscape_left" – landscape-left orientation is permitted
-   * - "landscape_right" – landscape-right orientation is permitted
-   */
-  screenOrientation?: ScreenOrientationTypes;
-  /**
-   * Sets the status bar animation (similar to the `StatusBar` component). Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file.
-   *
-   * @platform ios
-   */
-  statusBarAnimation?: 'none' | 'fade' | 'slide';
-  /**
-   * Whether the status bar should be hidden on this screen. Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file.
-   *
-   * @platform ios
-   */
-  statusBarHidden?: boolean;
-  /** Sets the status bar color (similar to the `StatusBar` component). Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file.
-   *
-   * @platform ios
-   */
-  statusBarStyle?: 'inverted' | 'auto' | 'light' | 'dark';
-  /**
-   * String that can be displayed in the header as a fallback for `headerTitle`.
+   * @description String that representing screen title that will get rendered in the middle section of the header. On iOS the title is centered on the header while on Android it is aligned to the left and placed next to back button (if one is present).
    */
   title?: string;
   /**

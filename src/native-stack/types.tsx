@@ -240,7 +240,7 @@ export type NativeStackNavigationOptions = {
    * - "landscape_left" – landscape-left orientation is permitted
    * - "landscape_right" – landscape-right orientation is permitted
    */
-  screenOrientation?: ScreenStackHeaderConfigProps['screenOrientation'];
+  screenOrientation?: ScreenProps['screenOrientation'];
   /**
    * How the screen should appear/disappear when pushed or popped at the top of the stack.
    * The following values are currently supported:
@@ -269,7 +269,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  statusBarAnimation?: ScreenStackHeaderConfigProps['statusBarAnimation'];
+  statusBarAnimation?: ScreenProps['statusBarAnimation'];
   /**
    * Whether the status bar should be hidden on this screen. Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file.
    *
@@ -280,7 +280,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  statusBarStyle?: ScreenStackHeaderConfigProps['statusBarStyle'];
+  statusBarStyle?: ScreenProps['statusBarStyle'];
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
    */

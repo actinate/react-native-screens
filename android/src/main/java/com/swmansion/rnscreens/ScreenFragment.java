@@ -65,22 +65,32 @@ public class ScreenFragment extends Fragment {
   }
 
   public void onContainerUpdate() {
-    if (!hasChildScreenWithConfig(getScreen())) {
-      // if there is no child with config, we look for a parent with config to set the orientation
-      ScreenStackHeaderConfig config = findHeaderConfig();
-      if (config != null && config.getScreenFragment().getActivity() != null) {
-        config.getScreenFragment().getActivity().setRequestedOrientation(config.getScreenOrientation());
+    if (!hasChildScreenWithOrientationSet(getScreen())) {
+      if (getScreen().hasOrientationSet()) {
+        if (getActivity() == null) {
+          // the activity of fragment is not set yet, so we take the base activity
+          if(mScreenView.getContext() != null && ((ReactContext) mScreenView.getContext()).getCurrentActivity() != null) {
+            ((ReactContext) mScreenView.getContext()).getCurrentActivity().setRequestedOrientation(getScreen().getScreenOrientation());
+          }
+        } else {
+          getActivity().setRequestedOrientation(getScreen().getScreenOrientation());
+        }
+      } else {
+        // if this screen has no orientation set and there is no child with orientation set, we look for a parent that has the orientation set
+        Screen parent = findParentWithOrientationSet();
+        if (parent != null && parent.getFragment() != null && parent.getFragment().getActivity() != null) {
+          parent.getFragment().getActivity().setRequestedOrientation(parent.getScreenOrientation());
+        }
       }
     }
   }
 
-  private @Nullable ScreenStackHeaderConfig findHeaderConfig() {
+  private @Nullable Screen findParentWithOrientationSet() {
     ViewParent parent = getScreen().getContainer();
     while (parent != null) {
       if (parent instanceof Screen) {
-        ScreenStackHeaderConfig headerConfig = ((Screen) parent).getHeaderConfig();
-        if (headerConfig != null) {
-          return headerConfig;
+        if (((Screen) parent).hasOrientationSet()) {
+          return (Screen) parent;
         }
       }
       parent = parent.getParent();
@@ -88,18 +98,17 @@ public class ScreenFragment extends Fragment {
     return null;
   }
 
-  protected boolean hasChildScreenWithConfig(Screen screen) {
+  protected boolean hasChildScreenWithOrientationSet(Screen screen) {
     if (screen == null) {
       return false;
     }
     for (ScreenContainer sc : screen.getFragment().getChildScreenContainers()) {
       // we check only the top screen for header config
       Screen topScreen = sc.getTopScreen();
-      ScreenStackHeaderConfig headerConfig = topScreen != null ? topScreen.getHeaderConfig(): null;
-      if (headerConfig != null) {
+      if (topScreen != null && topScreen.hasOrientationSet()) {
         return true;
       }
-      if (hasChildScreenWithConfig(topScreen)) {
+      if (hasChildScreenWithOrientationSet(topScreen)) {
         return true;
       }
     }
